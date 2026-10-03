@@ -27,7 +27,7 @@ namespace CarRentingSystem
         {
             services
                 .AddDbContext<CarRentingDbContext>(options => options
-                    .UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection")));
+                    .UseNpgsql(this.Configuration.GetConnectionString("DefaultConnection")));
             
             services.AddDatabaseDeveloperPageExceptionFilter();
 
