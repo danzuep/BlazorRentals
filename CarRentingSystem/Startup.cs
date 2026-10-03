@@ -42,7 +42,7 @@ namespace CarRentingSystem
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<CarRentingDbContext>();
 
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(_ => { }, typeof(Startup).Assembly);
 
             services.AddMemoryCache();
 
