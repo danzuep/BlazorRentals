@@ -2,8 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using AutoMapper;
-    using AutoMapper.QueryableExtensions;
     using CarRentingSystem.Data;
     using CarRentingSystem.Data.Models;
     using CarRentingSystem.Models;
@@ -12,13 +10,8 @@
     public class CarService : ICarService
     {
         private readonly CarRentingDbContext data;
-        private readonly IConfigurationProvider mapper;
-
-        public CarService(CarRentingDbContext data, IMapper mapper) 
-		{
-			this.data = data;
-			this.mapper = mapper.ConfigurationProvider;
-		}
+        public CarService(CarRentingDbContext data)
+            => this.data = data;
 
         public CarQueryServiceModel All(
             string brand = null,
@@ -70,7 +63,14 @@
                 .Cars
                 .Where(c => c.IsPublic)
                 .OrderByDescending(c => c.Id)
-                .ProjectTo<LatestCarServiceModel>(this.mapper)
+                .Select(c => new LatestCarServiceModel
+                {
+                    Id = c.Id,
+                    Brand = c.Brand,
+                    Model = c.Model,
+                    ImageUrl = c.ImageUrl,
+                    Year = c.Year
+                })
                 .Take(3)
                 .ToList();
 
@@ -78,7 +78,21 @@
             => this.data
                 .Cars
                 .Where(c => c.Id == id)
-                .ProjectTo<CarDetailsServiceModel>(this.mapper)
+                .Select(c => new CarDetailsServiceModel
+                {
+                    Id = c.Id,
+                    Brand = c.Brand,
+                    Model = c.Model,
+                    ImageUrl = c.ImageUrl,
+                    Year = c.Year,
+                    CategoryName = c.Category.Name,
+                    IsPublic = c.IsPublic,
+                    Description = c.Description,
+                    CategoryId = c.CategoryId,
+                    DealerId = c.DealerId,
+                    DealerName = c.Dealer.Name,
+                    UserId = c.Dealer.UserId
+                })
                 .FirstOrDefault();
 
         public int Create(string brand, string model, string description, string imageUrl, int year, int categoryId, int dealerId)
@@ -161,7 +175,11 @@
         public IEnumerable<CarCategoryServiceModel> AllCategories()
             => this.data
                 .Categories
-                .ProjectTo<CarCategoryServiceModel>(this.mapper)
+                .Select(c => new CarCategoryServiceModel
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                })
                 .ToList();
 
         public bool CategoryExists(int categoryId)
@@ -171,7 +189,16 @@
 
         private IEnumerable<CarServiceModel> GetCars(IQueryable<Car> carQuery)
             => carQuery
-                .ProjectTo<CarServiceModel>(this.mapper)
+                .Select(c => new CarServiceModel
+                {
+                    Id = c.Id,
+                    Brand = c.Brand,
+                    Model = c.Model,
+                    ImageUrl = c.ImageUrl,
+                    Year = c.Year,
+                    CategoryName = c.Category.Name,
+                    IsPublic = c.IsPublic
+                })
                 .ToList();
     }
 }
