@@ -1,0 +1,11 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "CarRentingSystem Aspire",
+      "type": "dotnet",
+      "request": "launch",
+      "projectPath": "${workspaceFolder}/CarRentingSystem.AppHost/CarRentingSystem.AppHost.csproj"
+    }
+  ]
+}

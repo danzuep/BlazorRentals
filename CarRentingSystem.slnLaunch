@@ -1,0 +1,10 @@
+{
+  "version": "0.2.1",
+  "configurations": [
+    {
+      "type": "project",
+      "name": "CarRentingSystem Aspire",
+      "project": "CarRentingSystem.AppHost\\CarRentingSystem.AppHost.csproj"
+    }
+  ]
+}
